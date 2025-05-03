@@ -1,6 +1,10 @@
 -- IGS (https://gm-donate.net) 
 -- Пример автоматического конвертера баланса в игровую валюту по игровым наборам/пакетам.
 
+-- Обратите внимание, этот пример кода взят с моего личного проекта. 
+-- Для вашего игрового сервера вам необходимо использовать свои функции для уведомлений/выдачи игровой валюты игроку (svdb.players.GiveWallet, ply:ShowMsg) 
+
+
 -- Пример конфига для игровых наборов
 UI = {}
 UI.ShopDonatePackages = {}
@@ -28,10 +32,7 @@ local AlreadyChecking = {}
 -- Наша функция для проверки игрока (можем вызывать в момент пополнения баланса/авторизации на игровом сервере)
 function IGS_CheckCredits(ply)
 	local s64 = ply:SteamID64()
-		
-	local p_id = ply.p_id
-	if !p_id then return end
-
+	
 	-- Предотвращаем просчет игрока если его баланс уже считается
 	if AlreadyChecking[s64] then return end
 	AlreadyChecking[s64] = true
@@ -102,7 +103,7 @@ function IGS_CheckCredits(ply)
 			print("Take balance", take_balance)		
 			
 			-- Выдаем нашу игровую валюту
-			svdb.players.GiveWallet(p_id, "p_crd", give_game_wallet, function() -- (используйте вашу функцию)			
+			svdb.players.GiveWallet(ply, "p_crd", give_game_wallet, function() -- (используйте вашу функцию)			
 				print("Give wallet", give_game_wallet)
 				
 				-- Делаем лог в IGS, на случай если у нас что-то где-то сломается и нужны будут логи об "успешности"
